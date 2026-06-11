@@ -116,31 +116,95 @@ export default function TestRunnerPage() {
         : result.percent >= 50
           ? "text-amber-600"
           : "text-red-600";
-    return (
-      <div className="mx-auto max-w-md text-center">
-        <h1 className="text-2xl font-bold text-gray-900">Результаты</h1>
-        <p className="mt-1 text-gray-500">{test.title}</p>
 
-        <div className="mt-6 rounded-2xl border border-gray-200 bg-white p-8 shadow-sm">
-          <div className={`text-5xl font-bold ${tone}`}>{result.percent}%</div>
-          <p className="mt-3 text-lg text-gray-800">
-            Правильных ответов: {result.correct} из {result.total}
-          </p>
-          <div className="mt-4 h-2.5 w-full overflow-hidden rounded-full bg-gray-200">
-            <div
-              className={`h-full rounded-full ${
-                result.percent >= 80
-                  ? "bg-green-500"
-                  : result.percent >= 50
-                    ? "bg-amber-500"
-                    : "bg-red-500"
-              }`}
-              style={{ width: `${result.percent}%` }}
-            />
+    // Разбор ошибок: вопросы, на которые дан неверный ответ (или нет ответа).
+    const wrongAnswers = test.questions
+      .map((q, index) => ({ q, index, given: answers[q.id] ?? null }))
+      .filter(({ q, given }) => given !== q.correctAnswer);
+
+    return (
+      <div className="mx-auto max-w-2xl">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-900">Результаты</h1>
+          <p className="mt-1 text-gray-500">{test.title}</p>
+
+          <div className="mt-6 rounded-2xl border border-gray-200 bg-white p-8 shadow-sm">
+            <div className={`text-5xl font-bold ${tone}`}>
+              {result.percent}%
+            </div>
+            <p className="mt-3 text-lg text-gray-800">
+              Правильных ответов: {result.correct} из {result.total}
+            </p>
+            <div className="mt-4 h-2.5 w-full overflow-hidden rounded-full bg-gray-200">
+              <div
+                className={`h-full rounded-full ${
+                  result.percent >= 80
+                    ? "bg-green-500"
+                    : result.percent >= 50
+                      ? "bg-amber-500"
+                      : "bg-red-500"
+                }`}
+                style={{ width: `${result.percent}%` }}
+              />
+            </div>
           </div>
         </div>
 
-        <div className="mt-6 flex justify-center gap-3">
+        {/* Разбор ошибок */}
+        <section className="mt-8 text-left">
+          {wrongAnswers.length === 0 ? (
+            <div className="rounded-2xl border border-green-200 bg-green-50 p-6 text-center">
+              <p className="text-lg font-semibold text-green-800">
+                Отлично! Все ответы верные 🎉
+              </p>
+            </div>
+          ) : (
+            <>
+              <h2 className="text-lg font-semibold text-gray-900">
+                Разбор ошибок ({wrongAnswers.length})
+              </h2>
+              <div className="mt-3 space-y-3">
+                {wrongAnswers.map(({ q, index, given }) => (
+                  <div
+                    key={q.id}
+                    className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm"
+                  >
+                    <h3 className="text-sm font-semibold text-gray-900">
+                      <span className="text-gray-400">№{index + 1}.</span>{" "}
+                      {q.question}
+                    </h3>
+
+                    {/* Ответ пользователя (неверный или отсутствует) */}
+                    <div className="mt-3 flex items-start gap-2 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-800">
+                      <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded bg-red-600 text-xs font-semibold text-white">
+                        {given ?? "—"}
+                      </span>
+                      <span>
+                        <span className="font-medium">Ваш ответ: </span>
+                        {given
+                          ? q.options[given]
+                          : "нет ответа (время вышло)"}
+                      </span>
+                    </div>
+
+                    {/* Правильный ответ */}
+                    <div className="mt-2 flex items-start gap-2 rounded-lg bg-green-50 px-3 py-2 text-sm text-green-800">
+                      <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded bg-green-600 text-xs font-semibold text-white">
+                        {q.correctAnswer}
+                      </span>
+                      <span>
+                        <span className="font-medium">Правильный ответ: </span>
+                        {q.options[q.correctAnswer]}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+        </section>
+
+        <div className="mt-8 flex justify-center gap-3">
           <button
             type="button"
             onClick={restart}
