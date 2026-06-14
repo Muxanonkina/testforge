@@ -669,6 +669,24 @@
           "correctAnswer": "C"
         }
       ]
+    },
+    {
+      "id": "81e6ede1-e3a0-4ae7-a215-f4dff0cdd57f",
+      "title": "Java",
+      "questionTime": 20,
+      "questions": [
+        {
+          "id": "89b24e03-e60c-4951-935b-3a2024c29aad",
+          "question": "в каком из 4 частей OOP используеться наследования",
+          "options": {
+            "A": "Enum",
+            "B": "Polymorphidsm",
+            "C": "Inheritance",
+            "D": "Encanpusilation"
+          },
+          "correctAnswer": "C"
+        }
+      ]
     }
   ]
 }
