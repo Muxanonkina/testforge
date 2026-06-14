@@ -9,7 +9,7 @@
 export type AnswerKey = "A" | "B" | "C" | "D" | "E";
 
 /** Допустимое время на один вопрос (в секундах). */
-export type QuestionTime = 10 | 20 | 30;
+export type QuestionTime = 10 | 20 | 30 | 40;
 
 /** Варианты ответов. A–D обязательны, E — опционален. */
 export interface AnswerOptions {
@@ -45,7 +45,7 @@ export interface TestsFile {
 export const ANSWER_KEYS: AnswerKey[] = ["A", "B", "C", "D", "E"];
 
 /** Допустимые значения времени на вопрос. */
-export const QUESTION_TIMES: QuestionTime[] = [10, 20, 30];
+export const QUESTION_TIMES: QuestionTime[] = [10, 20, 30, 40];
 
 /** Результат прохождения теста. */
 export interface TestResult {
